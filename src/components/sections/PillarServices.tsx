@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getServicesByPillar, siteConfig } from "@/config/site";
-import { ServiceIcon } from "@/components/ui/ServiceIcon";
-import { BrandImage } from "@/components/brand/BrandImage";
+import Image from "next/image";
+import { BrandImage, serviceImage } from "@/components/brand/BrandImage";
 
 /** Three columns — Create, Build, Automate — each listing its services. */
 export function PillarServices({ headingLevel = "h2", withAnchors = false }: { headingLevel?: "h2" | "h3"; withAnchors?: boolean }) {
@@ -24,7 +24,9 @@ export function PillarServices({ headingLevel = "h2", withAnchors = false }: { h
             {getServicesByPillar(pillar.id).map((s) => (
               <li key={s.slug}>
                 <Link href={`/services/${s.slug}`} className="group flex gap-3 py-4">
-                  <ServiceIcon name={s.icon} className="mt-0.5 size-5 shrink-0 text-graphite" />
+                  <span className="relative mt-0.5 aspect-[16/10] w-20 shrink-0 overflow-hidden bg-graphite">
+                    <Image src={`/brand/${serviceImage(s.slug, pillar.id)}.png`} alt="" fill sizes="80px" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                  </span>
                   <span>
                     <span className="block font-semibold underline-offset-4 group-hover:underline group-hover:decoration-lime group-hover:decoration-2">{s.name}</span>
                     <span className="mt-0.5 block text-sm leading-snug text-muted">{s.summary}</span>

@@ -7,7 +7,7 @@ import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import { ButtonLink } from "@/components/ui/Button";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { ProjectCard } from "@/components/sections/ProjectCard";
-import { BrandImage } from "@/components/brand/BrandImage";
+import { BrandImage, serviceImage } from "@/components/brand/BrandImage";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -79,7 +79,7 @@ export default async function ServicePage({ params }: Props) {
           </div>
           </div>
           <div className="lg:col-span-5">
-            <BrandImage name={pillar.id as "create" | "build" | "automate"} priority reveal={false} className="aspect-[16/10] border border-line-dark" sizes="(min-width: 1024px) 40vw, 100vw" />
+            <BrandImage name={serviceImage(service.slug, pillar.id)} priority reveal={false} className="aspect-[16/10] border border-line-dark" sizes="(min-width: 1024px) 40vw, 100vw" />
           </div>
           </div>
         </div>
