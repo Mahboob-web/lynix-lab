@@ -17,7 +17,7 @@ function createClient() {
     connectionString: withLibpqSslSemantics(env.DATABASE_URL),
     // Small pool: Hostinger web apps are a single modest process, and managed Postgres
     // free tiers cap connections. Raise if you move to a VPS.
-    max: Number(process.env.DATABASE_POOL_MAX ?? 5),
+    max: Number(process.env.DATABASE_POOL_MAX ?? (process.env.VERCEL ? 1 : 5)),
     idleTimeoutMillis: 30_000,
     connectionTimeoutMillis: 10_000,
   });
