@@ -4,7 +4,7 @@ import type { ComponentProps, ReactNode } from "react";
 type Variant = "lime" | "dark" | "outline" | "outlineLight" | "ghost";
 
 const base =
-  "group inline-flex items-center justify-center gap-3 rounded-[var(--radius-sm)] px-5 py-3 text-[1rem] font-semibold leading-none transition-colors disabled:cursor-not-allowed disabled:opacity-60";
+  "group inline-flex items-center justify-center gap-3 rounded-[var(--radius-sm)] px-5 py-3 text-[1rem] font-semibold leading-none transition-[background-color,color,transform,box-shadow] duration-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] motion-reduce:transform-none disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants: Record<Variant, string> = {
   lime: "bg-lime text-graphite hover:bg-ivory",

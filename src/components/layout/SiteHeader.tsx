@@ -40,7 +40,7 @@ export function SiteHeader() {
                 <Link
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
-                  className="relative py-2 text-[0.98rem] font-medium text-ivory/80 transition-colors hover:text-ivory aria-[current=page]:text-ivory aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-0 aria-[current=page]:after:-bottom-0.5 aria-[current=page]:after:h-0.5 aria-[current=page]:after:bg-lime"
+                  className="relative py-2 text-[0.98rem] font-medium text-ivory/80 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-ivory/60 after:transition-transform after:duration-300 hover:text-ivory hover:after:scale-x-100 aria-[current=page]:text-ivory aria-[current=page]:after:scale-x-100 aria-[current=page]:after:bg-lime"
                 >
                   {item.label}
                 </Link>

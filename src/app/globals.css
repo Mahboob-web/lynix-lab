@@ -174,3 +174,47 @@
   animation: block-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
   animation-delay: var(--delay, 0ms);
 }
+
+/* Above-the-fold entrance. CSS only, so text is never hidden waiting for JavaScript. */
+@keyframes rise-in {
+  from {
+    transform: translateY(var(--rise, 28px));
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.rise-in {
+  animation: rise-in 800ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* If JavaScript is off, scroll-reveal content must still be visible. */
+@media (scripting: none) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* Service / process cards: lift with perspective and a soft shadow. */
+.depth-grid {
+  perspective: 1400px;
+}
+.depth-card {
+  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 320ms ease, background-color 200ms ease;
+  will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+  .depth-card:hover,
+  .depth-card:focus-within {
+    position: relative;
+    z-index: 5;
+    transform: translateY(-6px) rotateX(1.2deg);
+    box-shadow: 0 30px 44px -28px rgba(23, 27, 25, 0.5);
+    background-color: var(--color-white);
+  }
+}

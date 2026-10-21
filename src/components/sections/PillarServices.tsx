@@ -6,9 +6,9 @@ import { ServiceIcon } from "@/components/ui/ServiceIcon";
 export function PillarServices({ headingLevel = "h2", withAnchors = false }: { headingLevel?: "h2" | "h3"; withAnchors?: boolean }) {
   const H = headingLevel;
   return (
-    <div className="grid gap-px overflow-hidden border border-line bg-line md:grid-cols-3">
+    <div className="depth-grid grid gap-px border border-line bg-line md:grid-cols-3">
       {siteConfig.pillars.map((pillar) => (
-        <section key={pillar.id} id={withAnchors ? pillar.id : undefined} className="scroll-mt-24 bg-ivory p-6 md:p-8" aria-labelledby={`pillar-${pillar.id}`}>
+        <section key={pillar.id} id={withAnchors ? pillar.id : undefined} className="depth-card scroll-mt-24 bg-ivory p-6 md:p-8" aria-labelledby={`pillar-${pillar.id}`}>
           <div className="flex items-center gap-3">
             <span aria-hidden className={`size-4 ${pillar.id === "automate" ? "bg-lime ring-1 ring-graphite" : "bg-graphite"}`} />
             <H id={`pillar-${pillar.id}`} className="text-2xl font-bold">

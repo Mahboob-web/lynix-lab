@@ -4,16 +4,20 @@ import type { Project } from "@/types/site";
 import { getPillar } from "@/config/site";
 import { BlockCover } from "@/components/brand/BlockCover";
 import { Tag } from "@/components/ui/Tag";
+import { Reveal } from "@/components/motion/Reveal";
+import { Tilt } from "@/components/motion/Tilt";
 
 export function ProjectCard({ project, headingLevel = "h3" }: { project: Project; headingLevel?: "h2" | "h3" }) {
   const H = headingLevel;
   return (
     <article className="group relative flex flex-col">
+      <Reveal variant="clip">
+      <Tilt>
       <div className="relative aspect-[16/10] overflow-hidden border border-line">
         {project.image ? (
           <Image src={project.image} alt="" fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover" />
         ) : (
-          <BlockCover slug={project.slug} pillar={project.pillar} className="size-full transition-transform duration-500 group-hover:scale-[1.03]" />
+          <BlockCover slug={project.slug} pillar={project.pillar} className="size-full transition-transform duration-700 ease-out group-hover:scale-[1.05]" />
         )}
         {project.sample ? (
           <span className="absolute left-3 top-3">
@@ -21,6 +25,8 @@ export function ProjectCard({ project, headingLevel = "h3" }: { project: Project
           </span>
         ) : null}
       </div>
+      </Tilt>
+      </Reveal>
       <p className="mt-4 text-sm text-muted">
         {project.client}, {project.year}
       </p>
