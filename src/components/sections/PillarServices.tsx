@@ -24,7 +24,7 @@ export function PillarServices({ headingLevel = "h2", withAnchors = false }: { h
             {getServicesByPillar(pillar.id).map((s) => (
               <li key={s.slug}>
                 <Link href={`/services/${s.slug}`} className="group flex gap-3 py-4">
-                  <span className="relative mt-0.5 aspect-[16/10] w-20 shrink-0 overflow-hidden bg-graphite">
+                  <span className="relative mt-0.5 aspect-[16/10] w-20 shrink-0 self-start overflow-hidden bg-graphite">
                     <Image src={`/brand/${serviceImage(s.slug, pillar.id)}.png`} alt="" fill sizes="80px" className="object-cover transition-transform duration-500 group-hover:scale-110" />
                   </span>
                   <span>
