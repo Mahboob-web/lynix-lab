@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      migrate:
+        description: "Run production migrations (prisma migrate deploy)"
+        type: boolean
+        default: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://example.com
+
+  migrate:
+    name: Run production migrations
+    if: github.event_name == 'workflow_dispatch' && inputs.migrate
+    needs: check
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx prisma migrate deploy
+        env:
+          DIRECT_URL: ${{ secrets.PROD_DIRECT_URL }}
+          DATABASE_URL: ${{ secrets.PROD_DIRECT_URL }}

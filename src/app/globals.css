@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+/*
+ * Brand colours are injected as CSS variables from src/config/site.ts (see app/layout.tsx),
+ * so changing the palette there re-themes the whole site. The values below are fallbacks.
+ */
+:root {
+  --brand-graphite: #171b19;
+  --brand-lime: #a7f51b;
+  --brand-ivory: #f5f7ef;
+  --brand-gray: #e4e8e2;
+  --brand-white: #ffffff;
+  --brand-muted: #5b625e;
+}
+
+@theme inline {
+  --color-graphite: var(--brand-graphite);
+  --color-lime: var(--brand-lime);
+  --color-ivory: var(--brand-ivory);
+  --color-gray: var(--brand-gray);
+  --color-white: var(--brand-white);
+  --color-muted: var(--brand-muted);
+  /* Derived tones */
+  --color-graphite-2: color-mix(in oklab, var(--brand-graphite) 88%, white);
+  --color-graphite-3: color-mix(in oklab, var(--brand-graphite) 72%, white);
+  --color-line: color-mix(in oklab, var(--brand-graphite) 14%, var(--brand-ivory));
+  --color-line-dark: color-mix(in oklab, var(--brand-ivory) 16%, var(--brand-graphite));
+  --color-ivory-dim: color-mix(in oklab, var(--brand-ivory) 70%, var(--brand-graphite));
+  --color-danger: #b42318;
+  --color-success: #2f6b0a;
+
+  --font-sans: var(--font-source), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+  /* Type scale (perfect fourth, 1.333) on an 18px body */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.6667rem;
+  --text-4xl: 3.5556rem;
+  --radius-sm: 3px;
+  --radius-md: 6px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-graphite);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    font-feature-settings: "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 750;
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-lime);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px var(--color-graphite);
+    border-radius: 2px;
+  }
+  ::selection {
+    background: var(--color-lime);
+    color: var(--color-graphite);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-site {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-site {
+      padding-inline: 2rem;
+    }
+  }
+  .display {
+    font-size: clamp(2.75rem, 7.2vw, 5.75rem);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+  }
+  .h-section {
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    font-weight: 780;
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+  }
+  .lede {
+    font-size: clamp(1.125rem, 1.6vw, 1.3125rem);
+    line-height: 1.55;
+    max-width: 38rem;
+  }
+  .tagline-spaced {
+    letter-spacing: 0.28em;
+    font-weight: 500;
+  }
+  .prose-site p + p {
+    margin-top: 1rem;
+  }
+  .field {
+    width: 100%;
+    border: 1px solid var(--color-line);
+    background: var(--color-white);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 0.85rem;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--color-graphite);
+  }
+  .field:focus-visible {
+    outline: 3px solid var(--color-lime);
+    outline-offset: 0;
+    box-shadow: 0 0 0 1px var(--color-graphite);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+  .label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+}
+
+/* Hero mark: the logo's four blocks slide into place once on load. */
+@keyframes block-in {
+  from {
+    transform: translate(var(--from-x, 0), var(--from-y, 0));
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+.block-in {
+  animation: block-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--delay, 0ms);
+}

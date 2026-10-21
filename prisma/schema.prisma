@@ -1,0 +1,387 @@
+// Lynix Lab — CRM data model (PostgreSQL)
+// Docs: https://pris.ly/d/prisma-schema
+//
+// Conventions
+// - ids are cuid strings; all tables have createdAt/updatedAt where useful
+// - "ownerId" drives row-level data isolation for the SALES role (see src/lib/auth/permissions.ts)
+// - soft-deletes are avoided for now; destructive actions are restricted to ADMIN and audit-logged
+
+generator client {
+  // Prisma 7 "Rust-free" client: TypeScript query compiler + node-postgres driver adapter.
+  // No native query-engine binary is needed at runtime, which keeps Hostinger builds simple.
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+// Connection URLs live in prisma.config.ts (Prisma 7) and come from environment variables.
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────────────────────── Auth ─────────────────────────────
+
+enum Role {
+  ADMIN // everything, incl. users & audit log
+  MANAGER // all CRM records, reports, assignment
+  SALES // own records only (ownerId / assignee)
+  VIEWER // read-only, all records
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  name             String
+  passwordHash     String
+  role             Role      @default(SALES)
+  isActive         Boolean   @default(true)
+  failedLoginCount Int       @default(0)
+  lockedUntil      DateTime?
+  lastLoginAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  sessions       Session[]
+  ownedLeads     Lead[]     @relation("LeadOwner")
+  ownedContacts  Contact[]  @relation("ContactOwner")
+  ownedCompanies Company[]  @relation("CompanyOwner")
+  ownedDeals     Deal[]     @relation("DealOwner")
+  ownedProjects  Project[]  @relation("ProjectOwner")
+  assignedTasks  Task[]     @relation("TaskAssignee")
+  createdTasks   Task[]     @relation("TaskCreator")
+  activities     Activity[]
+  auditLogs      AuditLog[]
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  // SHA-256 of the random cookie token — the raw token is never stored.
+  tokenHash  String   @unique
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  lastSeenAt DateTime @default(now())
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ───────────────────────────── CRM core ─────────────────────────────
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  website   String?
+  industry  String?
+  size      String?
+  phone     String?
+  address   String?
+  notes     String?
+  ownerId   String?
+  owner     User?    @relation("CompanyOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contacts   Contact[]
+  deals      Deal[]
+  projects   Project[]
+  tasks      Task[]
+  activities Activity[]
+
+  @@index([ownerId])
+  @@index([name])
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String?
+  email     String?
+  phone     String?
+  jobTitle  String?
+  notes     String?
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  ownerId   String?
+  owner     User?    @relation("ContactOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  leads      Lead[]
+  deals      Deal[]
+  tasks      Task[]
+  activities Activity[]
+
+  @@index([ownerId])
+  @@index([companyId])
+  @@index([email])
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL
+  WON
+  LOST
+  UNQUALIFIED
+}
+
+enum LeadSource {
+  WEBSITE
+  REFERRAL
+  SOCIAL
+  ADS
+  EVENT
+  OUTBOUND
+  OTHER
+}
+
+model Lead {
+  id              String     @id @default(cuid())
+  name            String
+  email           String
+  phone           String?
+  companyName     String?
+  serviceInterest String?
+  budget          String?
+  message         String?
+  source          LeadSource @default(WEBSITE)
+  status          LeadStatus @default(NEW)
+  consent         Boolean    @default(false)
+  ip              String?
+  userAgent       String?
+  ownerId         String?
+  owner           User?      @relation("LeadOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  contactId       String?
+  contact         Contact?   @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  convertedAt     DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  deals      Deal[]
+  tasks      Task[]
+  activities Activity[]
+
+  @@index([status])
+  @@index([ownerId])
+  @@index([createdAt])
+  @@index([email])
+}
+
+// ───────────────────────────── Sales pipeline ─────────────────────────────
+
+model Pipeline {
+  id        String          @id @default(cuid())
+  name      String
+  isDefault Boolean         @default(false)
+  createdAt DateTime        @default(now())
+  stages    PipelineStage[]
+  deals     Deal[]
+}
+
+model PipelineStage {
+  id          String   @id @default(cuid())
+  pipelineId  String
+  pipeline    Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  name        String
+  order       Int
+  probability Int      @default(0) // 0–100, used for weighted forecast
+  isWon       Boolean  @default(false)
+  isLost      Boolean  @default(false)
+  deals       Deal[]
+
+  @@unique([pipelineId, order])
+}
+
+enum DealStatus {
+  OPEN
+  WON
+  LOST
+}
+
+model Deal {
+  id                String        @id @default(cuid())
+  title             String
+  value             Decimal       @default(0) @db.Decimal(14, 2)
+  currency          String        @default("USD")
+  status            DealStatus    @default(OPEN)
+  pipelineId        String
+  pipeline          Pipeline      @relation(fields: [pipelineId], references: [id], onDelete: Restrict)
+  stageId           String
+  stage             PipelineStage @relation(fields: [stageId], references: [id], onDelete: Restrict)
+  companyId         String?
+  company           Company?      @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  contactId         String?
+  contact           Contact?      @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  leadId            String?
+  lead              Lead?         @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  ownerId           String?
+  owner             User?         @relation("DealOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  expectedCloseDate DateTime?
+  closedAt          DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  tasks      Task[]
+  projects   Project[]
+  activities Activity[]
+
+  @@index([stageId])
+  @@index([ownerId])
+  @@index([status])
+}
+
+// ───────────────────────────── Delivery ─────────────────────────────
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(PLANNING)
+  budget      Decimal?      @db.Decimal(14, 2)
+  startDate   DateTime?
+  dueDate     DateTime?
+  companyId   String?
+  company     Company?      @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  dealId      String?
+  deal        Deal?         @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  ownerId     String?
+  owner       User?         @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  tasks      Task[]
+  activities Activity[]
+
+  @@index([ownerId])
+  @@index([status])
+}
+
+// ───────────────────────────── Tasks & follow-ups ─────────────────────────────
+
+enum TaskType {
+  TODO
+  CALL
+  EMAIL
+  MEETING
+  FOLLOW_UP
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  type        TaskType   @default(TODO)
+  status      TaskStatus @default(OPEN)
+  priority    Priority   @default(MEDIUM)
+  dueAt       DateTime?
+  completedAt DateTime?
+  assigneeId  String?
+  assignee    User?      @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdById String?
+  createdBy   User?      @relation("TaskCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  leadId      String?
+  lead        Lead?      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  contactId   String?
+  contact     Contact?   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  companyId   String?
+  company     Company?   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dealId      String?
+  deal        Deal?      @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([assigneeId, status])
+  @@index([dueAt])
+}
+
+// ───────────────────────────── History ─────────────────────────────
+
+enum ActivityType {
+  NOTE
+  CALL
+  EMAIL
+  MEETING
+  STATUS_CHANGE
+  SYSTEM
+}
+
+// Business timeline shown on records (human-readable history).
+model Activity {
+  id        String       @id @default(cuid())
+  type      ActivityType @default(NOTE)
+  content   String
+  actorId   String?
+  actor     User?        @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  leadId    String?
+  lead      Lead?        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  contactId String?
+  contact   Contact?     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  companyId String?
+  company   Company?     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dealId    String?
+  deal      Deal?        @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  projectId String?
+  project   Project?     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@index([leadId])
+  @@index([contactId])
+  @@index([companyId])
+  @@index([dealId])
+  @@index([projectId])
+  @@index([createdAt])
+}
+
+// Security audit trail (append-only from the app's point of view).
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String // e.g. "auth.login", "lead.update", "user.role_change"
+  entityType String?
+  entityId   String?
+  metadata   Json?
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([actorId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+// Fixed-window rate limiting shared by every app instance (survives restarts).
+model RateLimit {
+  key       String   @id
+  count     Int
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}

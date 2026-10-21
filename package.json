@@ -1,0 +1,49 @@
+{
+  "name": "lynix-lab-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lynix Lab agency website and CRM (Next.js App Router, TypeScript, Tailwind, Prisma/PostgreSQL)",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@fontsource-variable/source-sans-3": "5.2.9",
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.5",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.1.17",
+    "@types/react-dom": "19.1.11",
+    "bcryptjs": "3.0.3",
+    "dotenv": "17.2.3",
+    "lucide-react": "1.61.0",
+    "next": "15.5.28",
+    "pg": "8.23.1",
+    "prisma": "7.10.1",
+    "react": "19.1.10",
+    "react-dom": "19.1.10",
+    "server-only": "0.0.1",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "zod": "4.3.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.7",
+    "eslint": "9.39.5",
+    "eslint-config-next": "15.5.28",
+    "tsx": "4.23.15"
+  }
+}
