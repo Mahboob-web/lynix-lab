@@ -34,7 +34,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   // Hostinger applies this automatically; setting it here keeps local, VPS and Docker builds identical.
-  output: "standalone",
+  // Vercel uses its own output format, so it's skipped there.
+  output: process.env.VERCEL ? undefined : "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
   // Lint runs in CI / locally (`npm run lint`) so a lint warning never blocks a production deploy.

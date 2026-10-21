@@ -18,7 +18,9 @@ export const siteConfig: SiteConfig = {
   tagline: "Build. Automate. Create.",
   description:
     "Lynix Lab is a digital, technology and AI agency. We create brands and content, build websites and apps, and automate the busywork with chatbots, voice agents and AI agents.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000"),
   locale: "en_US",
   keywords: [
     "digital agency",
