@@ -1,90 +1,109 @@
 {
-  "_comment": "Brand renders (generated with Higgsfield, gpt_image_2_5). scripts/fetch-brand-images.mjs downloads them into public/brand/ before each build. To replace one, change its url, or drop your own file at public/brand/<name>.png and remove the url. Service images use the service slug as the name; graphic-design, cloud-devops and business-automation reuse the create, build and automate renders (see serviceImage in BrandImage.tsx).",
+  "_comment": "Site photography: real photos from Unsplash (free to use under the Unsplash License, https://unsplash.com/license; `source` is each photo's page). scripts/fetch-brand-images.mjs downloads them into public/brand/<name>.jpg before each build. To use your own photo, put it at public/brand/<name>.jpg (it is kept) or change the url. Service photos are named after the service slug, project photos project-<slug>.",
   "images": {
-    "key": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_132254_78f35b10-441c-454f-a0c9-cea484ce4c87.png",
-      "width": 1344,
-      "height": 752
-    },
-    "create": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_132359_805cf1f8-f1b1-4f11-9d51-2f26f3c17620.png",
-      "width": 1344,
-      "height": 752
-    },
-    "build": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_132403_76ce1279-2147-4f60-878d-4959eaee056e.png",
-      "width": 1344,
-      "height": 752
-    },
-    "automate": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_132407_ea4af45c-7fbc-477b-8017-3c509f01f977.png",
-      "width": 1344,
-      "height": 752
-    },
-    "detail": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_132413_e684235d-8173-4e00-b423-82c67266fab4.png",
-      "width": 896,
-      "height": 1120
-    },
     "photography": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134437_453e39e1-bf23-466e-96fb-74d2b7f1c822.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1471341971476-ae15ff5dd4ea?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/camera-studio-set-up-aS4Duj2j7r4"
     },
     "videography": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134436_889a3740-874a-47cc-a276-106315c06e47.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1497015289639-54688650d173?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/person-sitting-in-front-bookshelf-KieCLNzKoBo"
+    },
+    "graphic-design": {
+      "url": "https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/designer-using-tablet-and-laptop-workspace-CGpifH3FjOA"
     },
     "branding": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134437_79e7ff6d-008a-4bbe-be0e-62fe92c0513a.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1581464668854-0da56c32393c?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/person-writing-on-white-notebook-8DTIQ_Klxho"
     },
     "social-media-management": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134437_b701d774-2716-40b3-80eb-b795ae7c77d8.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1690883793939-f8cca2f28ee0?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/a-person-holding-a-cell-phone-with-social-media-on-the-screen-0I21xHfgw0E"
     },
     "digital-marketing": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134505_76792280-dbb6-422f-8f3c-3eaa96887408.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1542744173-05336fcc7ad4?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/person-using-macbook-pro-pypeCEaJeZY"
     },
     "video-editing": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134505_7822ef57-32a9-4046-acda-8598da44210b.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1528109966604-5a6a4a964e8d?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/person-using-macbook-pro-turned-on-qJgW5ewKCO8"
     },
     "web-design": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134411_6b3a5eb7-377e-4c2d-9539-c65956af50f1.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1581521778197-f813ac8c16f0?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/black-pen-on-white-paper-vHaJiuCeZtc"
     },
     "web-development": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134410_a1c0cc07-ad91-4f77-866e-ba6959cf222c.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/monitor-showing-java-programming-OqtafYT5kTw"
     },
     "mobile-app-development": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134505_a583d509-93e0-4b58-a887-1987b4244380.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/smartphone-displaying-environmental-data-dashboard-sScmok4Iq1o"
+    },
+    "cloud-devops": {
+      "url": "https://images.unsplash.com/photo-1785682117346-4b114502e9b8?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/a-technician-works-on-a-server-rack-with-electronic-equipment-Au6-AcBY-rg"
+    },
+    "business-automation": {
+      "url": "https://images.unsplash.com/photo-1760952851538-17a59f691efe?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/sticky-notes-with-words-and-drawings-on-wooden-table-gLxNxONfRz0"
     },
     "chatbots": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134410_03dc4680-f953-47d4-a5b0-c986ce1d134c.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1513595207829-9f414c0665f6?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/person-hand-holding-iphone-x-L5DxWLmywmM"
     },
     "ai-voice-agents": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134411_0ad362f4-8cac-42c4-854c-1cc94109d0e0.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1553775282-20af80779df7?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/black-and-brown-headset-near-laptop-computer-BeVGrXEktIk"
     },
     "ai-agents": {
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EalJupE0NWrtjBUjOEYtesYUeZ/hf_20261021_134506_7f32b48e-d3ee-4ae6-bd8b-5153c4862812.png",
-      "width": 1344,
-      "height": 752
+      "url": "https://images.unsplash.com/photo-1592659762303-90081d34b277?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/close-up-of-dark-blue-circuit-board-pfR18JNEMv8"
+    },
+    "create": {
+      "url": "https://images.unsplash.com/photo-1586732711591-12c04655338f?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/man-in-white-t-shirt-and-black-pants-standing-in-front-of-woman-in-black-tank-G95AReIh_Ko"
+    },
+    "build": {
+      "url": "https://images.unsplash.com/photo-1719400471588-575b23e27bd7?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/a-man-sitting-in-front-of-three-computer-monitors-fdGTi4IcaJc"
+    },
+    "automate": {
+      "url": "https://images.unsplash.com/photo-1647427060118-4911c9821b82?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/a-factory-filled-with-lots-of-orange-machines-8gr6bObQLOI"
+    },
+    "key": {
+      "url": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/group-of-people-using-laptop-computer-QckxruozjRg"
+    },
+    "detail": {
+      "url": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/macbook-pro-white-ceramic-mugand-black-smartphone-on-table-cckf4TsHAuw"
+    },
+    "project-clinic-voice-agent": {
+      "url": "https://images.unsplash.com/photo-1629909614456-6b1c5c94cecc?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/blue-couch-beside-green-potted-plant-B_sK_xgzwVA"
+    },
+    "project-bakery-rebrand": {
+      "url": "https://images.unsplash.com/photo-1579697096985-41fe1430e5df?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/grilled-meat-on-black-grill-2-U0A2tNYhM"
+    },
+    "project-logistics-portal": {
+      "url": "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/brown-cardboard-boxes-on-white-metal-rack-BNBA1h-NgdY"
+    },
+    "project-real-estate-chatbot": {
+      "url": "https://images.unsplash.com/photo-1776186243408-3c0489503faa?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/modern-patio-with-outdoor-seating-and-lush-greenery-frjvtsVykcU"
+    },
+    "project-fitness-studio-launch": {
+      "url": "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/gym-equipment-inside-room-20jX9b35r_M"
+    },
+    "project-school-app": {
+      "url": "https://images.unsplash.com/photo-1758270705067-0d7edee57af0?w=1800&q=80&fm=jpg&fit=max",
+      "source": "https://unsplash.com/photos/students-attentively-listening-in-a-lecture-hall-RDBb3JUdOnc"
     }
   }
 }

@@ -52,7 +52,7 @@ export default async function ProjectPage({ params }: Props) {
         <div className="container-site">
           <div className="relative aspect-[21/9] overflow-hidden">
             {project.image ? (
-              <Image src={project.image} alt="" fill priority sizes="100vw" className="object-cover" />
+              <Image src={project.image} alt="" fill priority sizes="100vw" className="photo object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
             ) : (
               <BlockCover slug={project.slug} pillar={project.pillar} className="size-full" />
             )}

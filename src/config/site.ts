@@ -449,6 +449,7 @@ export const siteConfig: SiteConfig = {
   portfolio: [
     {
       slug: "clinic-voice-agent",
+      image: "/brand/project-clinic-voice-agent.jpg",
       title: "After-hours booking line for a dental clinic",
       client: "Dental clinic",
       pillar: "automate",
@@ -462,6 +463,7 @@ export const siteConfig: SiteConfig = {
     },
     {
       slug: "bakery-rebrand",
+      image: "/brand/project-bakery-rebrand.jpg",
       title: "Brand refresh and launch content for a home bakery",
       client: "Home bakery",
       pillar: "create",
@@ -475,6 +477,7 @@ export const siteConfig: SiteConfig = {
     },
     {
       slug: "logistics-portal",
+      image: "/brand/project-logistics-portal.jpg",
       title: "Customer portal for a logistics company",
       client: "Logistics company",
       pillar: "build",
@@ -488,6 +491,7 @@ export const siteConfig: SiteConfig = {
     },
     {
       slug: "real-estate-chatbot",
+      image: "/brand/project-real-estate-chatbot.jpg",
       title: "WhatsApp lead assistant for a real-estate agency",
       client: "Real-estate agency",
       pillar: "automate",
@@ -501,6 +505,7 @@ export const siteConfig: SiteConfig = {
     },
     {
       slug: "fitness-studio-launch",
+      image: "/brand/project-fitness-studio-launch.jpg",
       title: "Launch campaign for a boutique fitness studio",
       client: "Fitness studio",
       pillar: "create",
@@ -514,6 +519,7 @@ export const siteConfig: SiteConfig = {
     },
     {
       slug: "school-app",
+      image: "/brand/project-school-app.jpg",
       title: "Parent app for a school network",
       client: "School network",
       pillar: "build",

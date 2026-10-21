@@ -4,23 +4,15 @@ import { Reveal } from "@/components/motion/Reveal";
 
 export type BrandImageName = keyof typeof manifest.images;
 
-/** Services that share a pillar render instead of having their own. */
-const SHARED: Record<string, BrandImageName> = {
-  "graphic-design": "create",
-  "cloud-devops": "build",
-  "business-automation": "automate",
-};
-
-/** The render for a service: its own image (named after its slug), a shared one, or its pillar's. */
+/** The photo for a service: its own (named after its slug), else its pillar's. */
 export function serviceImage(slug: string, pillar: string): BrandImageName {
   if (slug in manifest.images) return slug as BrandImageName;
-  if (SHARED[slug]) return SHARED[slug];
   return (pillar in manifest.images ? pillar : "key") as BrandImageName;
 }
 
 /**
- * One of the brand renders (public/brand/<name>.png, fetched at build time).
- * The renders are abstract, so they are decorative (empty alt) unless `alt` is given.
+ * One of the site photos (public/brand/<name>.jpg, fetched at build time, see brand-images.json).
+ * Decorative by default (empty alt): the text next to each photo already says what it shows.
  * `parallax` drifts the image inside its frame while the frame scrolls through the viewport
  * (CSS scroll-driven animation; no JavaScript, off for reduced-motion users).
  */
@@ -44,12 +36,12 @@ export function BrandImage({
   const frame = (
     <div className={`relative overflow-hidden bg-graphite ${className}`}>
       <Image
-        src={`/brand/${name}.png`}
+        src={`/brand/${name}.jpg`}
         alt={alt}
         fill
         sizes={sizes}
         priority={priority}
-        className={`object-cover ${parallax ? "parallax-img" : ""}`}
+        className={`photo object-cover ${parallax ? "parallax-img" : ""}`}
       />
     </div>
   );

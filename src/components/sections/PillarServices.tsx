@@ -7,7 +7,7 @@ import { BrandImage, serviceImage } from "@/components/brand/BrandImage";
 export function PillarServices({ headingLevel = "h2", withAnchors = false }: { headingLevel?: "h2" | "h3"; withAnchors?: boolean }) {
   const H = headingLevel;
   return (
-    <div className="depth-grid grid gap-px border border-line bg-line md:grid-cols-3">
+    <div className="grid gap-px border border-line bg-line md:grid-cols-3">
       {siteConfig.pillars.map((pillar) => (
         <section key={pillar.id} id={withAnchors ? pillar.id : undefined} className="depth-card scroll-mt-24 bg-ivory p-6 md:p-8" aria-labelledby={`pillar-${pillar.id}`}>
           <div className="-mx-6 -mt-6 mb-7 md:-mx-8 md:-mt-8">
@@ -25,7 +25,7 @@ export function PillarServices({ headingLevel = "h2", withAnchors = false }: { h
               <li key={s.slug}>
                 <Link href={`/services/${s.slug}`} className="group flex gap-3 py-4">
                   <span className="relative mt-0.5 aspect-[16/10] w-20 shrink-0 self-start overflow-hidden bg-graphite">
-                    <Image src={`/brand/${serviceImage(s.slug, pillar.id)}.png`} alt="" fill sizes="80px" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                    <Image src={`/brand/${serviceImage(s.slug, pillar.id)}.jpg`} alt="" fill sizes="80px" className="photo object-cover transition-transform duration-500 group-hover:scale-110" />
                   </span>
                   <span>
                     <span className="block font-semibold underline-offset-4 group-hover:underline group-hover:decoration-lime group-hover:decoration-2">{s.name}</span>

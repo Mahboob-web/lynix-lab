@@ -7,11 +7,11 @@ export const alt = `${siteConfig.name}: ${siteConfig.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-/** The key brand render, if the build fetched it (see scripts/fetch-brand-images.mjs). */
+/** The key photo, if the build fetched it (see scripts/fetch-brand-images.mjs). */
 async function keyVisual() {
   try {
-    const buf = await readFile(path.join(process.cwd(), "public/brand/key.png"));
-    return `data:image/png;base64,${buf.toString("base64")}`;
+    const buf = await readFile(path.join(process.cwd(), "public/brand/key.jpg"));
+    return `data:image/jpeg;base64,${buf.toString("base64")}`;
   } catch {
     return null;
   }

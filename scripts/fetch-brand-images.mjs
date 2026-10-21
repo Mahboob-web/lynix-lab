@@ -1,4 +1,4 @@
-// Downloads the brand renders listed in src/config/brand-images.json into public/brand/.
+// Downloads the site photos listed in src/config/brand-images.json into public/brand/.
 // Runs automatically before `npm run build` (prebuild). Existing files are kept, so committed
 // or hand-placed images always win. A failed download only warns: the build continues.
 import { mkdir, writeFile, access } from "node:fs/promises";
@@ -13,10 +13,10 @@ await mkdir(outDir, { recursive: true });
 const exists = (p) => access(p).then(() => true, () => false);
 
 for (const [name, { url }] of Object.entries(images)) {
-  const file = path.join(outDir, `${name}.png`);
+  const file = path.join(outDir, `${name}.jpg`);
   if (await exists(file)) continue;
   if (!url) {
-    console.warn(`[brand-images] ${name}: no url and no file at public/brand/${name}.png`);
+    console.warn(`[brand-images] ${name}: no url and no file at public/brand/${name}.jpg`);
     continue;
   }
   try {

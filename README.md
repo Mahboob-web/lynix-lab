@@ -79,6 +79,8 @@ Before launch, search `site.ts` for **`TODO`** and replace:
 - [ ] `legalName` and `privacy`: have the privacy policy reviewed for your jurisdiction
 - [ ] `NEXT_PUBLIC_SITE_URL` set to the live domain
 
+**Photos** are real photographs from Unsplash (free under the Unsplash License), listed with their source pages in `src/config/brand-images.json`. They are downloaded into `public/brand/` at build time. To use your own photo of your work, put it at `public/brand/<name>.jpg` (for example `photography.jpg` or `project-bakery-rebrand.jpg`); a file that is already there is never overwritten.
+
 Changing `brand.colors` re-themes the whole site (colours are injected as CSS variables).
 
 ## Project structure
