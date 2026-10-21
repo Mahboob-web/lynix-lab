@@ -12,3 +12,6 @@ npm-debug.log*
 .DS_Store
 coverage/
 *.zip
+
+# Brand renders are downloaded at build time (scripts/fetch-brand-images.mjs)
+/public/brand/

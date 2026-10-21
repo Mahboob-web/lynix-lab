@@ -7,6 +7,7 @@ import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import { ButtonLink } from "@/components/ui/Button";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { ProjectCard } from "@/components/sections/ProjectCard";
+import { BrandImage } from "@/components/brand/BrandImage";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -64,6 +65,8 @@ export default async function ServicePage({ params }: Props) {
               </li>
             </ol>
           </nav>
+          <div className="grid items-end gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-7">
           <div className="mt-10 flex size-14 items-center justify-center bg-lime text-graphite">
             <ServiceIcon name={service.icon} className="size-7" />
           </div>
@@ -73,6 +76,11 @@ export default async function ServicePage({ params }: Props) {
             <ButtonLink href={`/contact?service=${encodeURIComponent(service.name)}`} variant="lime">
               Talk to us about {service.name}
             </ButtonLink>
+          </div>
+          </div>
+          <div className="lg:col-span-5">
+            <BrandImage name={pillar.id as "create" | "build" | "automate"} priority reveal={false} className="aspect-[16/10] border border-line-dark" sizes="(min-width: 1024px) 40vw, 100vw" />
+          </div>
           </div>
         </div>
       </section>

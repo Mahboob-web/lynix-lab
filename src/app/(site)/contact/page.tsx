@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { BrandImage } from "@/components/brand/BrandImage";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -55,6 +56,9 @@ export default async function ContactPage({ searchParams }: Props) {
                 {contact.hours}
               </li>
             </ul>
+            <div className="mt-14 hidden max-w-xs lg:block">
+              <BrandImage name="detail" className="aspect-[4/5]" sizes="320px" />
+            </div>
           </div>
         </div>
         <div>

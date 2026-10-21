@@ -218,3 +218,40 @@
     background-color: var(--color-white);
   }
 }
+
+/* Services ticker */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 60s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Brand renders drift inside their frame as it scrolls past (scroll-driven, no JS). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes image-drift {
+      from {
+        transform: translateY(-5%) scale(1.12);
+      }
+      to {
+        transform: translateY(5%) scale(1.12);
+      }
+    }
+    .parallax-img {
+      animation: image-drift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}

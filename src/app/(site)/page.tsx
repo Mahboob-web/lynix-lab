@@ -5,6 +5,7 @@ import { ProcessSteps } from "@/components/sections/ProcessSteps";
 import { ProjectCard } from "@/components/sections/ProjectCard";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { ServiceMarquee } from "@/components/sections/ServiceMarquee";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -13,6 +14,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <ServiceMarquee />
 
       <section aria-labelledby="services-heading" className="container-site py-20 md:py-28">
         <Reveal className="grid gap-6 md:grid-cols-12 md:items-end">

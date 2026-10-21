@@ -66,6 +66,7 @@ export function HeroMark() {
   const [hovered, setHovered] = useState<SlabId | null>(null);
   const [coarse, setCoarse] = useState(false);
   const [colors, setColors] = useState({ ivory: "#f5f7ef", lime: "#a7f51b" });
+  const scroll = useRef(0);
 
   // Decide after hydration, and load the (heavy) 3D chunk only once the page is idle.
   useEffect(() => {
@@ -93,16 +94,41 @@ export function HeroMark() {
 
   const on3D = wanted && !failed;
 
+  // Scroll progress through the hero (0 → 1), read by the scene every frame. The labels fade
+  // out early because the slabs move away from them.
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el || !on3D) return;
+    const section = el.closest("section") ?? el;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = section.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, -r.top / (r.height * 0.75)));
+      scroll.current = p;
+      el.style.setProperty("--explode", p.toFixed(3));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [on3D]);
+
   return (
     <div ref={wrap} className="relative mx-auto aspect-[163/156] w-full max-w-[17rem] sm:max-w-[22rem] lg:max-w-[26rem]">
       {on3D ? (
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-[-12%] transition-opacity duration-700"
+          className="pointer-events-none absolute inset-[-35%] transition-opacity duration-700"
           style={{ opacity: ready ? 1 : 0 }}
         >
           <SceneBoundary onError={() => setFailed(true)}>
-            <HeroScene colors={colors} hovered={hovered} active={visible} coarse={coarse} onReady={() => setReady(true)} onFail={() => setFailed(true)} />
+            <HeroScene colors={colors} hovered={hovered} scroll={scroll} active={visible} coarse={coarse} onReady={() => setReady(true)} onFail={() => setFailed(true)} />
           </SceneBoundary>
         </div>
       ) : null}
@@ -110,7 +136,7 @@ export function HeroMark() {
       {blocks.map((b) => {
         const flat = on3D && ready; // the 3D slab now provides the surface; keep only the label
         const fill = b.tone === "lime" ? "bg-lime" : "bg-ivory";
-        const cls = `block-in absolute z-10 flex items-end p-3 sm:p-4 text-graphite transition-[background-color,filter] duration-700 ${flat ? "bg-transparent" : fill}`;
+        const cls = `${flat ? "" : "block-in"} absolute z-10 flex items-end p-3 sm:p-4 text-graphite transition-[background-color,filter] duration-700 ${flat ? "bg-transparent opacity-[calc(1-var(--explode,0)*4)]" : fill}`;
         const style = { ...b.style, ["--from-x" as string]: b.from[0], ["--from-y" as string]: b.from[1], ["--delay" as string]: `${b.delay}ms` };
         if (!b.href) return <span key={b.id} aria-hidden className={cls} style={style} />;
         return (

@@ -16,10 +16,11 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 const W = 1.63;
 const H = 1.56;
 const SLABS = [
-  { id: "build", l: 0, t: 0, w: 36.2, h: 100, depth: 0.3, tone: "ivory", phase: 0 },
-  { id: "automate", l: 67.5, t: 5.1, w: 31.3, h: 30.8, depth: 0.22, tone: "lime", phase: 1.7 },
-  { id: "link", l: 39.9, t: 37.2, w: 22.1, h: 25.6, depth: 0.16, tone: "ivory", phase: 3.1 },
-  { id: "create", l: 63.8, t: 69.2, w: 36.2, h: 30.8, depth: 0.26, tone: "ivory", phase: 4.4 },
+  // `out`: where each slab drifts to as the hero scrolls away (x, y, z in scene units).
+  { id: "build", l: 0, t: 0, w: 36.2, h: 100, depth: 0.3, tone: "ivory", phase: 0, out: [-0.42, 0.08, 0.3] },
+  { id: "automate", l: 67.5, t: 5.1, w: 31.3, h: 30.8, depth: 0.22, tone: "lime", phase: 1.7, out: [0.38, 0.42, 0.75] },
+  { id: "link", l: 39.9, t: 37.2, w: 22.1, h: 25.6, depth: 0.16, tone: "ivory", phase: 3.1, out: [0.02, -0.04, 1.25] },
+  { id: "create", l: 63.8, t: 69.2, w: 36.2, h: 30.8, depth: 0.26, tone: "ivory", phase: 4.4, out: [0.34, -0.46, 0.45] },
 ] as const;
 
 export type SlabId = (typeof SLABS)[number]["id"];
@@ -67,7 +68,20 @@ function Environment() {
   return null;
 }
 
-function Slabs({ colors, hovered, onReady }: { colors: { ivory: string; lime: string }; hovered: SlabId | null; onReady: () => void }) {
+const center = (s: (typeof SLABS)[number]) => [((s.l + s.w / 2) / 100) * W - W / 2, -(((s.t + s.h / 2) / 100) * H - H / 2)] as const;
+
+function Slabs({
+  colors,
+  hovered,
+  scroll,
+  onReady,
+}: {
+  colors: { ivory: string; lime: string };
+  hovered: SlabId | null;
+  scroll: { current: number };
+  onReady: () => void;
+}) {
+  const spread = useRef(0);
   const group = useRef<THREE.Group>(null);
   const meshes = useRef<Record<string, THREE.Mesh | null>>({});
   const pointer = useRef({ x: 0, y: 0 });
@@ -123,9 +137,14 @@ function Slabs({ colors, hovered, onReady }: { colors: { ivory: string; lime: st
     intro.current = Math.min(1, intro.current + d / 1.25);
     const e = 1 - Math.pow(1 - intro.current, 3);
 
+    // Scroll: as the hero leaves the viewport the mark comes apart into its four pieces.
+    spread.current = THREE.MathUtils.damp(spread.current, scroll.current, 6, d);
+    const p = spread.current;
+    const ep = p * p * (3 - 2 * p); // smoothstep
+
     const small = size.width < 360 ? 0.6 : 1;
-    const ty = -0.2 + pointer.current.x * 0.22 * small + Math.sin(t * 0.35) * 0.06;
-    const tx = 0.1 + pointer.current.y * 0.12 * small + Math.sin(t * 0.27 + 1) * 0.03;
+    const ty = -0.2 + ep * 0.75 + pointer.current.x * 0.22 * small + Math.sin(t * 0.35) * 0.06;
+    const tx = 0.1 + ep * 0.22 + pointer.current.y * 0.12 * small + Math.sin(t * 0.27 + 1) * 0.03;
     g.rotation.y = THREE.MathUtils.damp(g.rotation.y, ty, 3.2, d);
     g.rotation.x = THREE.MathUtils.damp(g.rotation.x, tx, 3.2, d);
 
@@ -134,9 +153,13 @@ function Slabs({ colors, hovered, onReady }: { colors: { ivory: string; lime: st
       if (!m) return;
       // Extrude from nearly flat to full depth, keeping the front face fixed.
       m.scale.z = 0.12 + 0.88 * e;
-      const lift = hovered === s.id ? 0.1 : 0;
+      const lift = hovered === s.id && ep < 0.05 ? 0.1 : 0;
       const bob = Math.sin(t * 0.6 + s.phase) * 0.012;
-      m.position.z = THREE.MathUtils.damp(m.position.z, lift + bob, 5, d);
+      const [cx, cy] = center(s);
+      m.position.x = cx + s.out[0] * ep;
+      m.position.y = cy + s.out[1] * ep;
+      m.position.z = THREE.MathUtils.damp(m.position.z, lift + bob + s.out[2] * ep, 5, d);
+      m.rotation.z = s.out[0] * ep * 0.35;
     });
 
     if (!told.current) {
@@ -148,8 +171,7 @@ function Slabs({ colors, hovered, onReady }: { colors: { ivory: string; lime: st
   return (
     <group ref={group}>
       {SLABS.map((s, i) => {
-        const cx = ((s.l + s.w / 2) / 100) * W - W / 2;
-        const cy = -(((s.t + s.h / 2) / 100) * H - H / 2);
+        const [cx, cy] = center(s);
         return (
           <mesh
             key={s.id}
@@ -169,6 +191,7 @@ function Slabs({ colors, hovered, onReady }: { colors: { ivory: string; lime: st
 export default function HeroScene({
   colors,
   hovered,
+  scroll,
   active,
   coarse,
   onReady,
@@ -176,6 +199,7 @@ export default function HeroScene({
 }: {
   colors: { ivory: string; lime: string };
   hovered: SlabId | null;
+  scroll: { current: number };
   active: boolean;
   coarse: boolean;
   onReady: () => void;
@@ -183,7 +207,7 @@ export default function HeroScene({
 }) {
   // Camera distance such that the visible height at z = 0 equals the (expanded) mark height.
   const fov = 20;
-  const visibleH = H * 1.24;
+  const visibleH = H * 1.7; // canvas is the mark plus 35% on every side (room for the scroll spread)
   const z = visibleH / (2 * Math.tan((fov * Math.PI) / 360));
 
   return (
@@ -207,7 +231,7 @@ export default function HeroScene({
       <ambientLight intensity={0.08} />
       <directionalLight position={[-3, 3.2, 3.5]} intensity={1.35} />
       <pointLight position={[2.4, -1.6, 1.6]} intensity={3} distance={7} decay={2} color={colors.lime} />
-      <Slabs colors={colors} hovered={hovered} onReady={onReady} />
+      <Slabs colors={colors} hovered={hovered} scroll={scroll} onReady={onReady} />
     </Canvas>
   );
 }

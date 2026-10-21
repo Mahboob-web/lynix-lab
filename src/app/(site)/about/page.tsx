@@ -3,6 +3,7 @@ import { siteConfig } from "@/config/site";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { LogoMark } from "@/components/brand/LogoMark";
+import { BrandImage } from "@/components/brand/BrandImage";
 
 export const metadata: Metadata = {
   title: "About",
@@ -15,6 +16,11 @@ export default function AboutPage() {
   return (
     <>
       <PageHeader title={about.heading} intro={about.intro} />
+      <div className="bg-[linear-gradient(var(--color-graphite)_50%,var(--color-ivory)_50%)]">
+        <div className="container-site">
+          <BrandImage name="key" priority className="aspect-[16/9] md:aspect-[21/9]" sizes="(min-width: 1216px) 1152px, 100vw" />
+        </div>
+      </div>
 
       <section className="container-site grid gap-12 py-20 md:grid-cols-12 md:py-28">
         <div className="prose-site max-w-[36rem] text-lg leading-relaxed md:col-span-7">
