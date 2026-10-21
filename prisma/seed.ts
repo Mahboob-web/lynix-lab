@@ -12,7 +12,7 @@ import bcrypt from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client.ts";
 
-const url = process.env.DIRECT_URL || process.env.DATABASE_URL;
+const url = process.env.DIRECT_URL || process.env.POSTGRES_URL_NON_POOLING || process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL;
 if (!url) throw new Error("DATABASE_URL is not set.");
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) });
 

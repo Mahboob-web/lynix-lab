@@ -12,6 +12,6 @@ export default defineConfig({
   datasource: {
     // Migrations should use a direct (non-pooled) connection when your provider offers one.
     // `prisma generate` doesn't connect, so a placeholder is fine during builds without DB access.
-    url: process.env.DIRECT_URL || process.env.DATABASE_URL || "postgresql://placeholder:placeholder@localhost:5432/placeholder",
+    url: process.env.DIRECT_URL || process.env.POSTGRES_URL_NON_POOLING || process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL || "postgresql://placeholder:placeholder@localhost:5432/placeholder",
   },
 });

@@ -43,6 +43,15 @@ Need a local Postgres fast?
 
 The public website works without a database. Only the contact form and the CRM need it, and they show a clear message if it isn't configured.
 
+## Deploying on Vercel with Supabase
+
+1. **Database:** the Supabase project's schema comes from `prisma/migrations` (`npm run db:deploy`), and `npm run db:seed` creates the pipeline and first admin.
+2. **Connect it to Vercel:** in Supabase go to Project Settings → Integrations → Vercel and connect the `lynix-lab` Vercel project. That sets `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING`, which the app reads as fallbacks for `DATABASE_URL` / `DIRECT_URL`. Alternatively set `DATABASE_URL` (Transaction pooler, port 6543) and `DIRECT_URL` (Session pooler, port 5432) yourself. Vercel can't use Supabase's direct host because it is IPv6-only.
+3. **Also set** `AUTH_SECRET` (`openssl rand -base64 48`), `NEXT_PUBLIC_SITE_URL` and `DATABASE_POOL_MAX=1` (serverless functions each hold their own pool).
+4. **Redeploy**, then check that `/api/health` returns `"database":"ok"`.
+
+`sslmode=require` URLs get libpq semantics (`uselibpqcompat=true`): the connection is encrypted but the certificate is not verified. For full verification, use `sslmode=verify-full&sslrootcert=…` with Supabase's CA certificate.
+
 ## Scripts
 
 | Command | Purpose |

@@ -14,7 +14,7 @@ function createClient() {
     throw new DatabaseNotConfiguredError();
   }
   const adapter = new PrismaPg({
-    connectionString: env.DATABASE_URL,
+    connectionString: withLibpqSslSemantics(env.DATABASE_URL),
     // Small pool: Hostinger web apps are a single modest process, and managed Postgres
     // free tiers cap connections. Raise if you move to a VPS.
     max: Number(process.env.DATABASE_POOL_MAX ?? 5),
@@ -22,6 +22,18 @@ function createClient() {
     connectionTimeoutMillis: 10_000,
   });
   return new PrismaClient({ adapter, log: env.NODE_ENV === "development" ? ["warn", "error"] : ["error"] });
+}
+
+/**
+ * node-postgres treats `sslmode=require` as full certificate verification, which fails against
+ * managed poolers (e.g. Supabase) whose CA isn't in Node's trust store. `uselibpqcompat=true`
+ * restores the standard libpq meaning: the connection is encrypted, as with psql.
+ * To verify the server certificate too, set `sslmode=verify-full&sslrootcert=/path/ca.crt` yourself;
+ * this only changes URLs that say `sslmode=require` and don't already choose a behaviour.
+ */
+function withLibpqSslSemantics(url: string) {
+  if (!/[?&]sslmode=require\b/.test(url) || /[?&]uselibpqcompat=/.test(url)) return url;
+  return `${url}&uselibpqcompat=true`;
 }
 
 export class DatabaseNotConfiguredError extends Error {

@@ -16,7 +16,14 @@ const schema = z.object({
   TRUSTED_PROXY_HOPS: z.coerce.number().int().min(1).max(5).default(1),
 });
 
-const parsed = schema.safeParse(process.env);
+/**
+ * Accept the variable names set by the Supabase ↔ Vercel integration as fallbacks, so connecting
+ * the Supabase project in its dashboard is enough: POSTGRES_PRISMA_URL / POSTGRES_URL (pooled).
+ */
+const parsed = schema.safeParse({
+  ...process.env,
+  DATABASE_URL: process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL || undefined,
+});
 if (!parsed.success) {
   // Fail loudly with field names only — never print values.
   const fields = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
