@@ -34,6 +34,26 @@ setx HEADROOM_BEACON off
 
 `headroom telemetry` shows its state; `headroom telemetry --show` prints exactly what it would send.
 
+## Always on, for every project (recommended)
+
+One script per machine installs Headroom and makes **every** Claude Code session (CLI and the
+VS Code extension, in any folder) go through it:
+
+```powershell
+# Windows (PowerShell)
+powershell -ExecutionPolicy Bypass -File scripts/headroom/headroom-setup-windows.ps1
+```
+```bash
+# macOS / Linux
+bash scripts/headroom/headroom-setup.sh
+```
+
+It runs `headroom init -g claude`, which writes to `~/.claude/settings.json`:
+`ANTHROPIC_BASE_URL=http://127.0.0.1:8787`, `SessionStart` / `PreToolUse` hooks that start the local
+proxy automatically if it isn't running, the Headroom plugin and the `headroom` MCP tools.
+Restart Claude Code afterwards. Undo with `headroom unwrap claude` (the
+`headroom@headroom-marketplace` plugin entry stays in settings.json; delete it by hand if you want).
+
 ## 2. Use it
 
 ### Claude Code: compress everything (recommended)
