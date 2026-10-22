@@ -11,6 +11,7 @@ The marketing website and internal CRM for **Lynix Lab**, a digital, technology 
 | [docs/DEPLOYMENT-HOSTINGER.md](docs/DEPLOYMENT-HOSTINGER.md) | Hostinger requirements, database setup, environment variables, migrations, step-by-step deploy, VPS alternative |
 | [docs/SECURITY.md](docs/SECURITY.md) | Auth, sessions, RBAC, rate limiting, audit log, headers, data isolation |
 | [docs/CRM.md](docs/CRM.md) | CRM data model, permissions matrix, what's built and the roadmap |
+| [docs/AI-CODING.md](docs/AI-CODING.md) | Using Headroom to cut tokens when coding on this repo with Claude Code, Cursor and other agents |
 
 ---
 

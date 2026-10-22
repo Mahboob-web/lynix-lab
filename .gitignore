@@ -15,3 +15,7 @@ coverage/
 
 # Brand renders are downloaded at build time (scripts/fetch-brand-images.mjs)
 /public/brand/
+
+# Headroom / AI coding (local only)
+CLAUDE.local.md
+.serena/
