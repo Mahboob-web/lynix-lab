@@ -143,8 +143,10 @@ function Slabs({
     const ep = p * p * (3 - 2 * p); // smoothstep
 
     const small = size.width < 360 ? 0.6 : 1;
-    const ty = -0.2 + ep * 0.75 + pointer.current.x * 0.22 * small + Math.sin(t * 0.35) * 0.06;
-    const tx = 0.1 + ep * 0.22 + pointer.current.y * 0.12 * small + Math.sin(t * 0.27 + 1) * 0.03;
+    // Idle drift settles after ~8s so nothing keeps moving on its own; pointer tilt still responds.
+    const idle = t < 8 ? 1 : Math.max(0, 1 - (t - 8) / 3);
+    const ty = -0.2 + ep * 0.75 + pointer.current.x * 0.22 * small + Math.sin(t * 0.35) * 0.06 * idle;
+    const tx = 0.1 + ep * 0.22 + pointer.current.y * 0.12 * small + Math.sin(t * 0.27 + 1) * 0.03 * idle;
     g.rotation.y = THREE.MathUtils.damp(g.rotation.y, ty, 3.2, d);
     g.rotation.x = THREE.MathUtils.damp(g.rotation.x, tx, 3.2, d);
 
@@ -154,7 +156,7 @@ function Slabs({
       // Extrude from nearly flat to full depth, keeping the front face fixed.
       m.scale.z = 0.12 + 0.88 * e;
       const lift = hovered === s.id && ep < 0.05 ? 0.1 : 0;
-      const bob = Math.sin(t * 0.6 + s.phase) * 0.012;
+      const bob = Math.sin(t * 0.6 + s.phase) * 0.012 * idle;
       const [cx, cy] = center(s);
       m.position.x = cx + s.out[0] * ep;
       m.position.y = cy + s.out[1] * ep;

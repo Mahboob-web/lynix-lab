@@ -55,7 +55,8 @@ export interface ProcessStep {
 export interface PricingPlan {
   id: string;
   name: string;
-  price: string;
+  /** Starting price as a number, in `pricing.currency`. Formatted with Intl.NumberFormat. */
+  price: number;
   cadence: string;
   description: string;
   features: string[];
@@ -162,6 +163,8 @@ export interface SiteConfig {
   pricing: {
     heading: string;
     intro: string;
+    /** ISO 4217 code, e.g. "USD" or "PKR". */
+    currency: string;
     currencyNote: string;
     plans: PricingPlan[];
     alwaysIncluded: string[];

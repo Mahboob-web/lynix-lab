@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { Logo } from "@/components/brand/Logo";
@@ -12,6 +12,8 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // Close the mobile menu after navigation and on Escape.
   useEffect(() => setOpen(false), [pathname]);
@@ -20,9 +22,16 @@ export function SiteHeader() {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+    // Only the menu is reachable while it's open; focus moves into it and comes back on close.
+    const background = [document.getElementById("main"), document.querySelector("footer")].filter(Boolean) as HTMLElement[];
+    background.forEach((el) => el.setAttribute("inert", ""));
+    menuRef.current?.querySelector<HTMLElement>("a")?.focus();
+    const toggle = toggleRef.current;
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      background.forEach((el) => el.removeAttribute("inert"));
+      toggle?.focus();
     };
   }, [open]);
 
@@ -57,6 +66,7 @@ export function SiteHeader() {
           </span>
           <button
             type="button"
+            ref={toggleRef}
             className="inline-flex size-11 items-center justify-center rounded-[var(--radius-sm)] border border-line-dark lg:hidden"
             aria-expanded={open}
             aria-controls={menuId}
@@ -68,7 +78,7 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <div id={menuId} hidden={!open} className="border-t border-line-dark bg-graphite lg:hidden">
+      <div ref={menuRef} id={menuId} hidden={!open} className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-line-dark bg-graphite lg:hidden">
         <nav aria-label="Mobile" className="container-site flex min-h-[calc(100dvh-4rem)] flex-col py-6">
           <ul className="flex flex-col">
             {[{ label: "Home", href: "/" }, ...siteConfig.navigation].map((item) => (

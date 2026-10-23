@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   const { pricing } = siteConfig;
+  const money = new Intl.NumberFormat("en-US", { style: "currency", currency: pricing.currency, maximumFractionDigits: 0 });
   return (
     <>
       <PageHeader title={pricing.heading} intro={pricing.intro} />
@@ -32,7 +33,7 @@ export default function PricingPage() {
               </h2>
               <p className={`mt-2 ${plan.featured ? "text-ivory-dim" : "text-muted"}`}>{plan.description}</p>
               <p className="mt-8 flex items-baseline gap-2">
-                <span className="text-5xl font-extrabold tracking-tight">{plan.price}</span>
+                <span className="text-5xl font-extrabold tracking-tight tabular-nums">{money.format(plan.price)}</span>
                 <span className={plan.featured ? "text-ivory-dim" : "text-muted"}>{plan.cadence}</span>
               </p>
               <ul className="mb-10 mt-8 space-y-3">

@@ -10,6 +10,7 @@ export function Logo({ tone = "onLight", className = "" }: { tone?: "onLight" | 
     <Link href="/" className={`inline-flex items-center gap-2.5 ${className}`} aria-label={`${siteConfig.name} home`}>
       <LogoMark tone={tone} className="h-7 w-auto" />
       <span
+        translate="no"
         className={`text-[1.375rem] font-extrabold whitespace-nowrap leading-none tracking-[-0.04em] ${tone === "onDark" ? "text-ivory" : "text-graphite"}`}
       >
         {parts.join(" ")}

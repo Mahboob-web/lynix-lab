@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { activeSocialLinks, siteConfig } from "@/config/site";
 import { Logo } from "@/components/brand/Logo";
+import { CurrentYear } from "@/components/ui/CurrentYear";
 
 export function SiteFooter() {
   const social = activeSocialLinks();
@@ -58,7 +59,7 @@ export function SiteFooter() {
       <div className="border-t border-line-dark">
         <div className="container-site flex flex-col gap-2 py-6 text-sm text-ivory-dim sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {siteConfig.legalName}. All rights reserved.
+            © <CurrentYear /> {siteConfig.legalName}. All rights reserved.
           </p>
           <div className="flex items-center gap-1.5" aria-hidden>
             <span className="size-2.5 bg-lime" />

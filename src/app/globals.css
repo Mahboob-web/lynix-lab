@@ -49,6 +49,9 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    /* Keep focused/anchored elements clear of the sticky header. */
+    scroll-padding-top: 5.5rem;
+    -webkit-tap-highlight-color: color-mix(in oklab, var(--brand-lime) 35%, transparent);
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
   }
@@ -72,6 +75,15 @@
   }
   p {
     text-wrap: pretty;
+  }
+  a,
+  button,
+  summary,
+  label,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
   }
   :focus-visible {
     outline: 3px solid var(--color-lime);
@@ -225,7 +237,8 @@
 .marquee-track {
   animation: marquee 60s linear infinite;
 }
-.marquee:hover .marquee-track {
+.marquee:hover .marquee-track,
+.marquee[data-paused="true"] .marquee-track {
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {

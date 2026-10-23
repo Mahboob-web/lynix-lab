@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { siteConfig } from "@/config/site";
 import { contactSchema, fieldErrors } from "@/lib/validation/contact";
 import { Button } from "@/components/ui/Button";
@@ -13,6 +13,24 @@ export function ContactForm({ defaultService = "", defaultMessage = "" }: { defa
   const [errors, setErrors] = useState<Record<string, string>>({});
   const startedAt = useRef(Date.now());
   const formRef = useRef<HTMLFormElement>(null);
+  const sentRef = useRef<HTMLHeadingElement>(null);
+  const [dirty, setDirty] = useState(false);
+
+  // Warn before leaving with an unsent, half-filled form.
+  useEffect(() => {
+    if (!dirty || status.kind === "sent") return;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirty, status.kind]);
+
+  // The form is replaced by the confirmation, so move focus to it.
+  useEffect(() => {
+    if (status.kind === "sent") sentRef.current?.focus();
+  }, [status.kind]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -42,6 +60,7 @@ export function ContactForm({ defaultService = "", defaultMessage = "" }: { defa
       const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; fields?: Record<string, string> };
       if (res.ok && body.ok) {
         setStatus({ kind: "sent" });
+        setDirty(false);
         formRef.current?.reset();
         return;
       }
@@ -59,7 +78,9 @@ export function ContactForm({ defaultService = "", defaultMessage = "" }: { defa
           <span className="size-4 bg-lime ring-1 ring-graphite" />
           <span className="size-4 bg-graphite" />
         </span>
-        <h2 className="mt-6 text-2xl font-bold">Message sent</h2>
+        <h2 ref={sentRef} tabIndex={-1} className="mt-6 text-2xl font-bold outline-none">
+          Message sent
+        </h2>
         <p className="mt-2 text-muted">{siteConfig.contactForm.successMessage}</p>
         <button type="button" className="mt-6 font-semibold underline decoration-lime decoration-2 underline-offset-4" onClick={() => setStatus({ kind: "idle" })}>
           Send another message
@@ -77,7 +98,7 @@ export function ContactForm({ defaultService = "", defaultMessage = "" }: { defa
   const a11y = (name: string) => ({ "aria-invalid": errors[name] ? true : undefined, "aria-describedby": errors[name] ? `${name}-error` : undefined });
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} noValidate className="grid gap-5 sm:grid-cols-2">
+    <form ref={formRef} onSubmit={onSubmit} onInput={() => setDirty(true)} noValidate className="grid gap-5 sm:grid-cols-2">
       <div>
         <label htmlFor="name" className="label">
           Name
@@ -89,7 +110,7 @@ export function ContactForm({ defaultService = "", defaultMessage = "" }: { defa
         <label htmlFor="email" className="label">
           Email
         </label>
-        <input id="email" name="email" type="email" autoComplete="email" required maxLength={200} className="field" {...a11y("email")} />
+        <input id="email" name="email" type="email" autoComplete="email" spellCheck={false} required maxLength={200} className="field" {...a11y("email")} />
         {err("email")}
       </div>
       <div>

@@ -348,12 +348,13 @@ export const siteConfig: SiteConfig = {
   pricing: {
     heading: "Clear starting prices",
     intro: "Every project gets a fixed quote after a discovery call. These packages show where most projects start.",
+    currency: "USD",
     currencyNote: "Prices in USD, excluding taxes, ad spend and third-party subscriptions.",
     plans: [
       {
         id: "launch",
         name: "Launch",
-        price: "$1,200",
+        price: 1200,
         cadence: "one-off, from",
         description: "A custom website that looks right, loads fast and turns visitors into enquiries.",
         features: [
@@ -368,7 +369,7 @@ export const siteConfig: SiteConfig = {
       {
         id: "grow",
         name: "Grow",
-        price: "$900",
+        price: 900,
         cadence: "per month",
         description: "Consistent social media and marketing, planned and produced for you.",
         features: [
@@ -384,7 +385,7 @@ export const siteConfig: SiteConfig = {
       {
         id: "automate",
         name: "Automate",
-        price: "$1,500",
+        price: 1500,
         cadence: "one-off, from",
         description: "A chatbot or voice agent that answers customers and books work around the clock.",
         features: [
